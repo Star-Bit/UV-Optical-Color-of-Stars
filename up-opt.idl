@@ -1,0 +1,146 @@
+Pro BB2
+
+restore, '/Users/faculty/marzke/ast470/photomodel.sav'
+
+h=6.6260785d-27
+c=2.99792458d10
+k=1.3806488d-16
+
+wavelength=spectra.wavelength*1d-8
+
+AMU=FLTARR(110)
+AMB=FLTARR(110)
+AMV=FLTARR(110)
+AMMU=FLTARR(110)
+AMMB=FLTARR(110)
+AMMV=FLTARR(110)
+
+
+;f=0 AKA U-Filter***
+
+;Vega
+    FluxVegaU=TOTAL(vega*ubv_transmission[*,0])
+
+;BB for 110 T's
+
+    for i=0,109 do begin
+    
+    BBodyU=((2*h*c^2)/(((wavelength)^5)))*(1d0/((exp((h*c)/(wavelength*k*spectra.teff[i])))-1))
+
+   	 FluxBBodyU=TOTAL((BBodyU*ubv_transmission[*,0]))
+
+;Mag
+   	 AppMagU = -2.5*ALOG10((FluxBBodyU)/(FluxVegaU))
+
+   	 AMU[i]=AppMagU
+
+    endfor
+
+
+
+
+
+;f=1 AKA B-Filter***
+
+;Vega
+    FluxVegaB=TOTAL(vega*ubv_transmission[*,1])
+
+;BB for 110 T's
+
+    for i=0,109 do begin
+    
+    BBodyB=((2*h*c^2)/(((wavelength)^5)))*(1d0/((exp((h*c)/(wavelength*k*spectra.teff[i])))-1))
+
+   	 FluxBBodyB=TOTAL((BBodyB*ubv_transmission[*,1]))
+
+;Mag
+   	 AppMagB = -2.5*ALOG10((FluxBBodyB)/(FluxVegaB))
+
+   	 AMB[i]=AppMagB
+
+    endfor
+
+
+
+
+
+;f=2 AKA V-Filter***
+
+;Vega
+    FluxVegaV=TOTAL(vega*ubv_transmission[*,2])
+
+;BB for 110 T's
+
+    for i=0,109 do begin
+    
+    BBodyV=((2*h*c^2)/(((wavelength)^5)))*(1d0/((exp((h*c)/(wavelength*k*spectra.teff[i])))-1))
+
+   	 FluxBBodyV=TOTAL((BBodyV*ubv_transmission[*,2]))
+
+;Mag
+   	 AppMagV = -2.5*ALOG10((FluxBBodyV)/(FluxVegaV))
+
+   	 AMV[i]=AppMagV
+
+    endfor
+
+
+
+
+;plotting a U-B vs B-V diagram for BB
+    y=AMU-AMB
+    x=AMB-AMV
+
+    plot, x,y,xtitle ='B-V', ytitle = 'U-B', title='U-B vs B-V for Blackbodies and Model Stars',psym=6
+
+
+
+;calculate apparent magnitudes through U,B,V for model stellar spectra
+;U-Filter
+
+    for t=0,109 do begin
+   	 FluxModU=TOTAL((spectra.flux[*,t]*ubv_transmission[*,0]))
+
+;Mag
+   	 AppMagModU = -2.5*ALOG10((FluxModU)/(FluxVegaU))
+
+   	 AMMU[t]=AppMagModU
+
+    endfor
+
+;B-Filter
+
+    for t=0,109 do begin
+   	 FluxModB=TOTAL((spectra.flux[*,t]*ubv_transmission[*,1]))
+
+;Mag
+   	 AppMagModB = -2.5*ALOG10((FluxModB)/(FluxVegaB))
+
+   	 AMMB[t]=AppMagModB
+
+    endfor
+
+;V-Filter
+
+    for t=0,109 do begin
+   	 FluxModV=TOTAL((spectra.flux[*,t]*ubv_transmission[*,2]))
+
+;Mag
+   	 AppMagModV = -2.5*ALOG10((FluxModV)/(FluxVegaV))
+
+   	 AMMV[t]=AppMagModV
+
+    endfor
+
+;plotting a U-B vs B-V diagram for Models
+
+    a=AMMU-AMMB
+    b=AMMB-AMMV
+
+    oplot, b, a, psym=1
+
+stop
+end
+
+
+ 
