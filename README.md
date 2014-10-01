@@ -22,3 +22,6 @@ Summary of photomodel.sav folder:
     FLUX - 800 by 110 element array containing 800 fluxes for each of the 110 model stellar spectra
     UBV_TRANSMISSION- 800 by 3 element array containing the standard transmission functions for the Johnson U,B, and V filters. 
     VEGA - 800 element array containing the spectrum of Vega measured at the same wavelengths as in WAVELENGTH. 
+    
+When the program is run successfully the produced graph should appear as
+![Completed Graph!](https://cloud.githubusercontent.com/assets/7351268/4479443/4bd669d4-498e-11e4-8b44-c6c0040f0239.png)
